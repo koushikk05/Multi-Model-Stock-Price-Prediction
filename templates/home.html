@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+
+{% block buttontext %}
+<button type="button" class="btn btn-light" onclick="logout()"> {{ btntext }} </button>
+{% endblock %}
+
+{% block content %}
+
+
+<div class="container-fluid bg-light p-2 px-5">
+    <form action="#" method="post">
+        <div class="row justify-content-center">
+            <span class="text-danger">{{ error }}</span>
+        </div>
+        <div class="row">
+            <div class="mb-3 col">
+                <label for="symbol" class="form-label">Symbol</label>
+                <input type="text" name="symbol" class="form-control" id="symbol" value="" placeholder="Stock Name" required>
+            </div>
+            <div class="mb-3 col">
+                <label for="period" class="form-label">Period</label>
+                <input type="text" name="period" class="form-control" id="period" value="" placeholder="Period" required>
+            </div>
+            <div class="mb-3 col">
+                <label for="algorithm" class="form-label">Algorithms</label>
+                <br>
+                <select name="algorithm" id="algorithm" style="height: 35px;">
+                    <option value="All" selected>All</option>
+                    <option value="LSTM + GRU">LSTM + GRU</option>
+                    <option value="Gated recurrent unit(GRU)">Gated recurrent unit(GRU)</option>
+                    <option value="Long short-term memory (LSTM)">Long short-term memory (LSTM)</option>
+                    <option value="K-nearest neighgbour(KNN)">K-nearest neighgbour(KNN)</option>
+                    <option value="Random Forest Regression(RF)">Random Forest Regression(RF)</option>
+                    <option value="Support Vector Regression(SVR)">Support Vector Regression(SVR)</option>
+                </select>
+            </div>
+            <div class="mb-3 col align-self-end">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="reset" class="btn btn-secondary">Reset</button>
+            </div>
+        </div>
+        {% if isGraph %}
+        {% for key, figure in graphJSON.items() %}
+            <div id='chart{{ key }}' class='mb-5 chart{{ key }}'></div>
+        {% endfor %}
+        {% endif %}
+    </form>
+</div>
+
+{% endblock %}
+
+{% block plotarea %}
+{% if isGraph %}
+{% for key, figure in graphJSON.items() %}
+    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+    <script type='text/javascript'>
+    var graphs = {{figure | safe}};
+    Plotly.plot('chart{{ key }}',graphs,{});
+    </script>
+{% endfor %}
+{% endif %}
+{% endblock %}
